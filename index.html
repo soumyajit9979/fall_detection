@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weight Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .data-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .data-container iframe {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .data-container iframe {
+                max-width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>orientation Display</h1>
+        <div id="data-top" style="text-align: center;">
+            <p id="weightX">X: Loading...</p>
+            <p id="weightY">Y: Loading...</p>
+            <p id="weightZ">Z: Loading...</p>
+        </div>
+        <p>Welcome to our patient monitoring system. Stay up-to-date with the latest orientation measurements.</p>
+        <div class="data-container">
+            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2099225/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line"></iframe>
+        </div>
+        <div class="data-container">
+            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2099225/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+        </div>
+        <div class="data-container">
+            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2099225/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+        </div>
+        <p>Note: The graphs display the orientation measurements over time for fields X, Y, and Z.</p>
+    </div>
+
+    <script>
+        // Configure ThingSpeak
+        var apiKey = 'FHNLGWXLEJA9L0AX';  // Replace with your ThingSpeak API key
+        var channelId = '2099225';  // Replace with your ThingSpeak channel ID
+
+        // Fetch the latest weight value from ThingSpeak for Field X
+        function fetchWeightX() {
+            var url = 'https://api.thingspeak.com/channels/' + channelId + '/fields/1/last.json?api_key=' + apiKey;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract the weight value from the JSON response
+                    var weightValue = data.field1;
+
+                    // Display the weight value on the webpage
+                    var weightElement = document.getElementById('weightX');
+                    weightElement.textContent = 'X: ' + weightValue;
+
+                    // Fetch the weight value again after 5 seconds
+                    setTimeout(fetchWeightX, 5000);
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+        }
+
+        // Fetch the latest weight value from ThingSpeak for Field Y
+        function fetchWeightY() {
+            var url = 'https://api.thingspeak.com/channels/' + channelId + '/fields/2/last.json?api_key=' + apiKey;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract the weight value from the JSON response
+                    var weightValue = data.field2;
+
+                    // Display the weight value on the webpage
+                    var weightElement = document.getElementById('weightY');
+                    weightElement.textContent = 'Y: ' + weightValue ;
+
+                    // Fetch the weight value again after 5 seconds
+                    setTimeout(fetchWeightY, 5000);
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+        }
+
+        // Fetch the latest weight value from ThingSpeak for Field Z
+        function fetchWeightZ() {
+            var url = 'https://api.thingspeak.com/channels/' + channelId + '/fields/3/last.json?api_key=' + apiKey;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Extract the weight value from the JSON response
+                    var weightValue = data.field3;
+
+                    // Display the weight value on the webpage
+                    var weightElement = document.getElementById('weightZ');
+                    weightElement.textContent = 'Z: ' + weightValue;
+
+                    // Fetch the weight value again after 5 seconds
+                    setTimeout(fetchWeightZ, 5000);
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+        }
+
+        // Initial fetch of weight values
+        fetchWeightX();
+        fetchWeightY();
+        fetchWeightZ();
+    </script>
+</body>
+</html>
